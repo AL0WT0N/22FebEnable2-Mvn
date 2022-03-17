@@ -27,9 +27,9 @@ public class CustomerDAO implements Dao<Customer> {
 	}
 
 	@Override
-	public void update(Customer t) {
+	public Customer update(Customer t) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override

@@ -95,7 +95,7 @@ public class PersonDAO implements Dao<Person> {
 	}
 	
 	// UPDATE
-	public void update(Person person) {
+	public Person update(Person person) {
 		try(Connection conn = DriverManager.getConnection(connectionURL, username, password);
 				PreparedStatement statement = conn
 						.prepareStatement("UPDATE people SET firstName = ?, lastName = ?, age = ? WHERE id = ?")) {
@@ -105,9 +105,11 @@ public class PersonDAO implements Dao<Person> {
 			statement.setInt(3, person.getAge());
 			statement.setInt(4, person.getId());
 			statement.executeUpdate();
+			return readByID(person.getId());
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());
 		}
+		return null;
 	}
 	
 	// DELETE

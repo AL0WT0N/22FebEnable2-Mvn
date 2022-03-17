@@ -14,7 +14,7 @@ public interface Dao<T> {
 	
 	List<T> readAll();
 	
-	void update(T t);
+	T update(T t);
 	
 	int delete(int id);
 	
