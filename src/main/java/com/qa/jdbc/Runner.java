@@ -19,8 +19,8 @@ public class Runner {
 		PersonController pController = new PersonController(pDAO);
 		
 		// CRUD Methods
-		pController.create();
-//		pController.readAll();
+//		pController.create();
+		pController.readAll();
 //		pController.readByID();
 //		pController.update();
 //		pController.delete();

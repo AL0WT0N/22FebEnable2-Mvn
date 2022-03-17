@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.qa.jdbc.domain.Person;
 
-public class PersonDAO {
+public class PersonDAO implements Dao<Person> {
 
 	public static final Logger LOGGER = LogManager.getLogger();
 	
@@ -24,7 +24,7 @@ public class PersonDAO {
 	private String password = "root";
 	
 	// Model from resultSet method - every DAO has one of these
-	public Person personFromResultSet(ResultSet resultSet) throws SQLException{
+	public Person modelFromResultSet(ResultSet resultSet) throws SQLException{
 		int id = resultSet.getInt("id");
 		String firstName = resultSet.getString("firstName");
 		String lastName = resultSet.getString("lastName");
@@ -67,7 +67,7 @@ public class PersonDAO {
 			statement.setInt(1, id);
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
-			return personFromResultSet(resultSet);
+			return modelFromResultSet(resultSet);
 			
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());
@@ -84,7 +84,7 @@ public class PersonDAO {
 			
 			List<Person> people = new ArrayList<>();
 			while (resultSet.next()) {
-				people.add(personFromResultSet(resultSet));
+				people.add(modelFromResultSet(resultSet));
 			}
 			
 			return people;
@@ -105,29 +105,22 @@ public class PersonDAO {
 			statement.setInt(3, person.getAge());
 			statement.setInt(4, person.getId());
 			statement.executeUpdate();
-			System.out.println("Person updated");
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());
 		}
 	}
 	
 	// DELETE
-	public void delete(int id) {
+	public int delete(int id) {
 		try(Connection conn = DriverManager.getConnection(connectionURL, username, password);
 				PreparedStatement statement = conn
 						.prepareStatement("DELETE FROM people WHERE id = ?")) {
 			
 			statement.setInt(1, id);
-			int result = statement.executeUpdate();
-			
-			if (result != 0) {
-				System.out.println("Person Deleted");
-			} else {
-				throw new SQLException();
-			}
-					
+			return statement.executeUpdate();			
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());
 		}
+		return 0;
 	}
 }
