@@ -2,6 +2,7 @@ package com.qa.jdbc;
 
 import java.util.List;
 
+import com.qa.jdbc.controllers.PersonController;
 import com.qa.jdbc.daos.PersonDAO;
 import com.qa.jdbc.domain.Person;
 
@@ -13,22 +14,15 @@ public class Runner {
 //		tc.testConnection();
 
 		// CRUD functionality (CREATE, READ, UPDATE, DELETE)
-		// Using DAO - Data Access Object
+		// Data Access Object
 		PersonDAO pDAO = new PersonDAO();
+		PersonController pController = new PersonController(pDAO);
 		
-//		Person p = new Person("Sam", "Smith", 15);
-		
-//		pDAO.create(p);
-		
-		// Read by ID
-		System.out.println(pDAO.readByID(1));
-		
-		
-		// Read All
-		List<Person> people = pDAO.readAll();
-		
-		for (Person person : people) {
-			System.out.println(person);
-		}
+		// CRUD Methods
+		pController.create();
+//		pController.readAll();
+//		pController.readByID();
+//		pController.update();
+//		pController.delete();
 	}
 }

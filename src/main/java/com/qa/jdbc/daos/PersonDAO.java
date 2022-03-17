@@ -39,9 +39,8 @@ public class PersonDAO {
 				Statement statement = conn.createStatement()) {
 			statement.executeUpdate("INSERT INTO people(firstName, lastName, age) VALUES ('" + person.getFirstName()
 					+ "', '" + person.getLastName() + "', " + person.getAge() + ");");
-			System.out.println("Person Created");
 		} catch (SQLException e) {
-			LOGGER.error(e);
+			LOGGER.error(e.getMessage());
 		}
 	}
 	
@@ -71,7 +70,8 @@ public class PersonDAO {
 			return personFromResultSet(resultSet);
 			
 		} catch (SQLException e) {
-			LOGGER.error(e);
+			LOGGER.error(e.getMessage());
+//			e.printStackTrace();
 		}
 		return null;
 	}
@@ -89,14 +89,45 @@ public class PersonDAO {
 			
 			return people;
 		} catch (SQLException e) {
-			LOGGER.error(e);
+			LOGGER.error(e.getMessage());
 		}
 		return null;
 	}
 	
 	// UPDATE
-	public void update() {}
+	public void update(Person person) {
+		try(Connection conn = DriverManager.getConnection(connectionURL, username, password);
+				PreparedStatement statement = conn
+						.prepareStatement("UPDATE people SET firstName = ?, lastName = ?, age = ? WHERE id = ?")) {
+			
+			statement.setString(1, person.getFirstName());
+			statement.setString(2, person.getLastName());
+			statement.setInt(3, person.getAge());
+			statement.setInt(4, person.getId());
+			statement.executeUpdate();
+			System.out.println("Person updated");
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+		}
+	}
 	
 	// DELETE
-	public void delete() {}
+	public void delete(int id) {
+		try(Connection conn = DriverManager.getConnection(connectionURL, username, password);
+				PreparedStatement statement = conn
+						.prepareStatement("DELETE FROM people WHERE id = ?")) {
+			
+			statement.setInt(1, id);
+			int result = statement.executeUpdate();
+			
+			if (result != 0) {
+				System.out.println("Person Deleted");
+			} else {
+				throw new SQLException();
+			}
+					
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+		}
+	}
 }
